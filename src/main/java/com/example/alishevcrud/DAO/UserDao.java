@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserDao {
      List<User> index();
      User showUserById(long id);
+     void save(User user);
 }

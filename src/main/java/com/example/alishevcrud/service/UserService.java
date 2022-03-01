@@ -9,4 +9,6 @@ import java.util.List;
 public interface UserService  {
     public List<User> index();
     public User showUserById(long id);
+    void save(User user);
+
 }
