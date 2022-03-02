@@ -41,4 +41,9 @@ public class UserDaoImpl implements UserDao {
         User userToUpdate = showUserById(id);
         userToUpdate.setName(user.getName());
     }
+
+    @Override
+    public void delete(long id) {
+        userList.removeIf(p -> p.getId() == id); //Проходим по коллекции(если id == id аргумента, то User из коллекции удалится
+    }
 }
