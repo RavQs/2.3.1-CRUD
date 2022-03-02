@@ -5,11 +5,20 @@
     <title>Update</title>
 </head>
 <body>
-    <form th:method="PATCH" th:action="@{/users/{id}(id =${user.getId()})}" th:object="${user}">
+<form th:method="PATCH" th:action="@{/users/{id}(id =${user.getId()})}" th:object="${user}">
     <label for="name">Enter name: </label>
     <input type="text" th:field="*{name}" id="name"/>
     <br/>
+    <hr/>
+    <label for="post">Enter post: </label>
+    <input type="text" th:field="*{post}" id="post"/>
+    <br/>
+    <hr/>
+    <label for="age">Enter age: </label>
+    <input type="number" th:field="*{age}" id="age"/>
+    <br/>
+    <hr/>
     <input type="submit" value="Update!"/>
-
+</form>
 </body>
 </html>
