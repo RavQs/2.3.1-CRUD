@@ -8,4 +8,5 @@ public interface UserDao {
      List<User> index();
      User showUserById(long id);
      void save(User user);
+     void update(long id,User user);
 }

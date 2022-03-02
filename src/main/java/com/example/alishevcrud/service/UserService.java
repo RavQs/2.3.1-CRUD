@@ -10,5 +10,6 @@ public interface UserService  {
     public List<User> index();
     public User showUserById(long id);
     void save(User user);
+    void update(long id,User user);
 
 }

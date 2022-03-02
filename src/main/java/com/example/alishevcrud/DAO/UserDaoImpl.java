@@ -14,8 +14,8 @@ public class UserDaoImpl implements UserDao {
     {
         userList = new ArrayList<>();
 
-        userList.add(new User(++PEOPLE_COUNT,"Kalleb","Admin",(byte) 29));
-        userList.add(new User(++PEOPLE_COUNT,"Alyona","Secretary",(byte) 23));
+        userList.add(new User(++PEOPLE_COUNT, "Kalleb", "Admin", (byte) 29));
+        userList.add(new User(++PEOPLE_COUNT, "Alyona", "Secretary", (byte) 23));
 
     }
 
@@ -34,5 +34,11 @@ public class UserDaoImpl implements UserDao {
     public void save(User user) {
         user.setId(++PEOPLE_COUNT);
         userList.add(user);
+    }
+
+    @Override
+    public void update(long id, User user) {
+        User userToUpdate = showUserById(id);
+        userToUpdate.setName(user.getName());
     }
 }
