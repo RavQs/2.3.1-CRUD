@@ -14,7 +14,7 @@ public class User {
     private Long id;
 
     @Column
-    @NotEmpty(message = "Enter namme")
+    @NotEmpty(message = "Enter name")
     @Size(min = 3, max = 40, message = "incorrect name type")
     private String name;
 
@@ -30,8 +30,7 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String name, String email, byte age) {
-        this.id = id;
+    public User(String name, String email, byte age) {
         this.name = name;
         this.email = email;
         this.age = age;

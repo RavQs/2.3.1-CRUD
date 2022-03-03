@@ -1,48 +1,71 @@
 package com.example.alishevcrud.config;
 
-import com.example.alishevcrud.model.User;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
-import org.hibernate.service.ServiceRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.sql.DataSource;
 import java.util.Properties;
 
+
+@Configuration
+@PropertySource("classpath:db.properties")
+@ComponentScan(basePackages = "com")
+@EnableTransactionManagement
 public class JavaConfig {
-    private static SessionFactory sessionFactory;
 
-    private final static String USER_NAME = "Ravv";
-    private final static String USER_PASS = "5378144Kor!";
-    private final static String CONNECTION_URL = "jdbc:mysql://localhost:3306/kata";
+    @Autowired
+    private Environment env;
 
-    private JavaConfig(){}
+    @Bean
+    public DataSource getDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-    public static SessionFactory getSessionFactory() {
-        if(sessionFactory == null){
-            try {
-                Configuration configuration = new Configuration();
-                Properties settings = new Properties();
-                settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-                settings.put(Environment.USER, USER_NAME);
-                settings.put(Environment.PASS, USER_PASS);
-                settings.put(Environment.URL, CONNECTION_URL);
-                settings.put(Environment.SHOW_SQL,true);
-                settings.put(Environment.DIALECT,"org.hibernate.dialect.MySQL5Dialect");
-                settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-                settings.put(Environment.HBM2DDL_AUTO, "none");
+        dataSource.setDriverClassName(env.getProperty("db.driver"));
+        dataSource.setUrl(env.getProperty("db.url"));
+        dataSource.setUsername(env.getProperty("db.username"));
+        dataSource.setPassword(env.getProperty("db.password"));
+        return dataSource;
+    }
 
-                configuration.setProperties(settings);
-                configuration.addAnnotatedClass(User.class);
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean em
+                = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(getDataSource());
+        em.setPackagesToScan("com.example.alishevcrud.model");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        em.setJpaProperties(additionalProperties());
+        return em;
+    }
 
-                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                        .applySettings(configuration.getProperties()).build();
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
+    }
 
-                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return sessionFactory;
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    private Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+        properties.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
+        properties.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+        return properties;
     }
 }

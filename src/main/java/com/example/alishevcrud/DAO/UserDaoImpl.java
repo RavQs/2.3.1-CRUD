@@ -4,12 +4,14 @@ import com.example.alishevcrud.model.User;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserDaoImpl implements UserDao {
-
+    @PersistenceContext
     private EntityManager entityManager;
 
     private List<User> userList;
@@ -17,18 +19,10 @@ public class UserDaoImpl implements UserDao {
 
 
 
-    {
-        userList = new ArrayList<>();
-
-        userList.add(new User(++PEOPLE_COUNT, "Kalleb", "Admin@gmail.com", (byte) 29));
-        userList.add(new User(++PEOPLE_COUNT, "Alyona", "Secretary@mail.ru", (byte) 23));
-        userList.add(new User(++PEOPLE_COUNT,"Lee","developer@kakao.com",(byte)24));
-
-    }
-
     @Override
     public List<User> index() {
-        return userList;
+        TypedQuery<User> query = entityManager.createQuery("select u from user u", User.class);
+        return query.getResultList();
     }
 
     @Override
