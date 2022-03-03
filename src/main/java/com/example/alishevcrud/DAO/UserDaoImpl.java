@@ -15,11 +15,6 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private List<User> userList;
-    private static long PEOPLE_COUNT;
-
-
-
     @Override
     public List<User> index() {
         TypedQuery<User> query = entityManager.createQuery("select u from user u", User.class);
