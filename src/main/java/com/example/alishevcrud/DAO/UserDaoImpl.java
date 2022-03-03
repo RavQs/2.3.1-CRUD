@@ -3,13 +3,19 @@ package com.example.alishevcrud.DAO;
 import com.example.alishevcrud.model.User;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserDaoImpl implements UserDao {
+
+    private EntityManager entityManager;
+
     private List<User> userList;
     private static long PEOPLE_COUNT;
+
+
 
     {
         userList = new ArrayList<>();

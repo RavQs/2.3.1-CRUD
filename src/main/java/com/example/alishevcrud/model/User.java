@@ -1,29 +1,29 @@
 package com.example.alishevcrud.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-@Entity(name = "users")
+@Entity(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     @NotEmpty(message = "Enter namme")
     @Size(min = 3, max = 40, message = "incorrect name type")
     private String name;
 
+    @Column
     @NotEmpty(message = "Enter email")
     @Email(message = "Email must've be valid")
     private String email;
 
+    @Column
     @Min(value = 0, message = "Age cannot be less than 0")
     private byte age;
 
