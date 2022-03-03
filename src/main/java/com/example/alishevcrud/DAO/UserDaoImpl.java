@@ -6,10 +6,11 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.ArrayList;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
+@Transactional
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -27,26 +28,27 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User showUserById(long id) {
-        return userList.stream().filter(user -> user.getId() == id)
-                .findAny().orElse(null);
+        TypedQuery<User> query = entityManager.createQuery("select u from user u where u.id=:id", User.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
     }
 
     @Override
     public void save(User user) {
-        user.setId(++PEOPLE_COUNT);
-        userList.add(user);
+        entityManager.persist(user);
     }
 
     @Override
     public void update(long id, User user) {
-        User userToUpdate = showUserById(id);
-        userToUpdate.setName(user.getName());
-        userToUpdate.setAge(user.getAge());
-        userToUpdate.setEmail(user.getEmail());
+        User userForUpdate = showUserById(id);
+        userForUpdate.setName(user.getName());
+        userForUpdate.setEmail(user.getEmail());
+        userForUpdate.setAge(user.getAge());
+        entityManager.merge(userForUpdate);
     }
 
     @Override
     public void delete(long id) {
-        userList.removeIf(p -> p.getId() == id); //Проходим по коллекции(если id == id аргумента, то User из коллекции удалится
+        entityManager.remove(showUserById(id));
     }
 }
