@@ -5,6 +5,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @PropertySource("classpath:db.properties")
-public class HibConfig {
+public class JavaConfig {
 
 }

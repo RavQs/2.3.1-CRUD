@@ -1,23 +1,32 @@
 package com.example.alishevcrud.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 public class User {
     private Long id;
+
+    @NotEmpty(message = "Enter namme")
+    @Size(min = 3, max = 40, message = "incorrect name type")
     private String name;
-    private String post;
+
+    @NotEmpty(message = "Enter email")
+    @Email(message = "Email must've be valid")
+    private String email;
+
+    @Min(value = 0, message = "Age cannot be less than 0")
     private byte age;
 
-    public User(){};
+    public User() {
+    }
 
-    public User(Long id, String name, String post,byte age){
+    public User(Long id, String name, String email, byte age) {
         this.id = id;
         this.name = name;
-        this.post = post;
+        this.email = email;
         this.age = age;
     }
 
@@ -25,7 +34,6 @@ public class User {
         this.id = id;
     }
 
-    @Id
     public Long getId() {
         return id;
     }
@@ -38,12 +46,12 @@ public class User {
         this.name = name;
     }
 
-    public String getPost() {
-        return post;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPost(String post) {
-        this.post = post;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public byte getAge() {
@@ -59,7 +67,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", post='" + post + '\'' +
+                ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
     }
