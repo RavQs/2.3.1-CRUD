@@ -7,8 +7,8 @@ import java.util.List;
 
 @Service
 public interface UserService  {
-    public List<User> index();
-    public User showUserById(long id);
+    List<User> index();
+    User showUserById(long id);
     void save(User user);
     void update(long id,User user);
     void delete(long id);

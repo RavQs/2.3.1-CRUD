@@ -29,7 +29,7 @@ public class UsersController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") long id, Model model) {
         //Получим одного человека по его Id из DAO и передадим на отображение в представление
         model.addAttribute("user", userService.showUserById(id));
         return "users/user";
